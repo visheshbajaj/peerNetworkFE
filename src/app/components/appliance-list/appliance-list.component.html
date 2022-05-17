@@ -1,0 +1,8 @@
+<div class="container">
+    <app-appliance *ngFor="let appliance of applianceStateList"
+    [inputApplianceState]="appliance"
+    (outputApplianceState)="updateApplianceState($event)"
+    (outputApplianceValue)="updateApplianceValue($event)"
+    >
+    </app-appliance>
+</div>
