@@ -11,8 +11,8 @@ export class ApplianceListComponent implements OnInit {
 
   applianceState: ApplianceState = new ApplianceState();
   
-  acState: ApplianceState = new ApplianceState('AC', true, 20, '192.168.0.1', 8000);
-  bulbState:ApplianceState = new ApplianceState('Bulb', true, 40, '192.168.0.2', 8000);
+  acState: ApplianceState = new ApplianceState('AC', true, 20, '54.204.76.18', 8085);
+  bulbState:ApplianceState = new ApplianceState('Bulb', true, 40, '54.204.76.18', 8085);
 
   defaultState: ApplianceState[] = [this.acState, this.bulbState]
   applianceStateList: ApplianceState[] = []
@@ -21,11 +21,13 @@ export class ApplianceListComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.defaultState.map(appliance => {
-      this.connectionHandler.getData(appliance).subscribe(result => {
-        this.applianceStateList.push(applianceStateMapper(result))
-      })
-    })
+    // this.defaultState.map(appliance => {
+    //   this.connectionHandler.getData(appliance).subscribe(result => {
+    //     this.applianceStateList.push(applianceStateMapper(result))
+    //   })
+    // })
+
+    this.applianceStateList = this.defaultState;
 
   }
 
@@ -37,19 +39,18 @@ export class ApplianceListComponent implements OnInit {
     
     if(appliance){
       appliance.state = state 
-      this.connectionHandler.postData(appliance)
+      this.connectionHandler.postData(appliance).subscribe(res => console.log(res))
     }
   }
 
   updateApplianceValue(event: any): void {
     const sourceId = event.source.id;
     const value = event.value;
-    
     const appliance = this.applianceStateList.find(element => element.appliance == sourceId)
     
     if(appliance){
       appliance.value = value 
-      this.connectionHandler.postData(appliance)
+      this.connectionHandler.postData(appliance).subscribe(res => console.log(res))
     }
   }
 

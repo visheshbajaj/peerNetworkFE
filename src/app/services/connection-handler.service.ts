@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApplianceState } from '../models/ApplianceState';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,13 +16,19 @@ export class ConnectionHandlerService {
   }
 
   postData(data: ApplianceState){
-    let _url = this.generateRequestUrl(data.ip, data.port, 'POST');
-    console.log(data, _url)
-    // return this.http.post(_url, data)
+    let _url = this.generateRequestUrl(data, 'POST');
+    console.log(_url)
+    return this.http.put(_url, {})
   }
 
-  private generateRequestUrl(ipAddress: string, portNumber: number, action: string ): string {
-    const apiEndpoint = action == 'GET' ? 'getData' : action == 'POST' ? 'putData' : '';
-    return `http://${ipAddress}:${portNumber}/peer/${apiEndpoint}`
+  private generateRequestUrl(applianceState:ApplianceState, action: string ) {
+    if(action == 'POST'){
+      const sensorType = applianceState.appliance == 'AC' ? 'temperature' : 'motion'
+      const state = applianceState.state ? 'on' : 'off'
+      return `http://${applianceState.ip}:${applianceState.port}/peer/putData?sensorType=${sensorType}&value=${applianceState.value}&onOff=${state}`  
+    } else {
+      return `http://${applianceState.ip}:${applianceState.port}/peer/getData`
+    }
+    
   }
 }
