@@ -11,8 +11,10 @@ export class ApplianceListComponent implements OnInit {
 
   applianceState: ApplianceState = new ApplianceState();
 
-  acState: ApplianceState = new ApplianceState('AC', true, 20);
-  lightState:ApplianceState = new ApplianceState('Light', true, 40);
+  lightState:ApplianceState = new ApplianceState(1, "Light", false, 0);
+  acState: ApplianceState = new ApplianceState(2, "AC", false, 0);
+
+  REFRESH_INTERVAL = 10000
 
   defaultState: ApplianceState[] = [this.acState, this.lightState]
   applianceStateList: ApplianceState[] = []
@@ -20,18 +22,25 @@ export class ApplianceListComponent implements OnInit {
   constructor(private connectionHandler: ConnectionHandlerService) {}
 
   ngOnInit(): void {
+    this.updateApplianceStateList()
+    setInterval(() => this.updateApplianceStateList(), this.REFRESH_INTERVAL);
+  }
+
+  updateApplianceStateList():void {
+    let applianceStateList: ApplianceState[] = []
     this.defaultState.map(appliance => {
       this.connectionHandler.getData(appliance).subscribe(result => {
-        this.applianceStateList.push(applianceStateMapper(result))
+        applianceStateList.push(applianceStateMapper(result))
       })
     })
+    applianceStateList.sort((a,b) => a.id - b.id)
+    this.applianceStateList = applianceStateList
   }
 
   updateApplianceState(event: any): void {
-    const sourceId = event.source.id;
+    const sourceId = event.source.id.split("-")[1];
     const state = event.checked;
-
-    const appliance = this.applianceStateList.find(element => element.appliance == sourceId)
+    const appliance = this.applianceStateList.find(element => element.id == sourceId)
 
     if(appliance){
       appliance.state = state

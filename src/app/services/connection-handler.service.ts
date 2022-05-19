@@ -12,26 +12,27 @@ export class ConnectionHandlerService {
   constructor(private http: HttpClient) { }
 
   getData(data: ApplianceState){
-    let _url = this.generateRequestUrl(data, 'GET');
+    let _url = ConnectionHandlerService.generateRequestUrl(data, 'GET');
     return this.http.get(_url);
   }
 
   putData(data: ApplianceState){
-    let _url = this.generateRequestUrl(data, 'PUT');
+    let _url = ConnectionHandlerService.generateRequestUrl(data, 'PUT');
     return this.http.put(_url, {}, { responseType: 'text'});
   }
 
-  private generateRequestUrl(applianceState:ApplianceState, action: string ) {
+  private static generateRequestUrl(applianceState:ApplianceState, action: string ) {
     let sensorType, ip, port;
-    switch (applianceState.appliance) {
-      case 'AC':
-        sensorType = 'temperature'
-        ip = '54.204.76.18'
-        port = '8085'
-        break;
-      case 'Light':
+    // @TODO: Fetch these details from Disha at runtime
+    switch (applianceState.id) {
+      case 1:
         sensorType = 'motion'
         ip = '18.212.204.157'
+        port = '8085'
+        break;
+      case 2:
+        sensorType = 'temperature'
+        ip = '54.204.76.18'
         port = '8085'
         break;
     }

@@ -1,4 +1,5 @@
-<div class="container">
+<h2 class="dash-head">Appliance Dashboard</h2>
+<div class="device-container">
     <app-appliance *ngFor="let appliance of applianceStateList"
     [inputApplianceState]="appliance"
     (outputApplianceState)="updateApplianceState($event)"
