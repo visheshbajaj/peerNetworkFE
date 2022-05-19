@@ -18,7 +18,7 @@ export class ConnectionHandlerService {
 
   putData(data: ApplianceState){
     let _url = this.generateRequestUrl(data, 'PUT');
-    return this.http.put(_url, {});
+    return this.http.put(_url, {}, { responseType: 'text'});
   }
 
   private generateRequestUrl(applianceState:ApplianceState, action: string ) {
