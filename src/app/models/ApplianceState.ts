@@ -16,6 +16,6 @@ export class ApplianceState{
     }
 }
 
-export function applianceStateMapper(input: {}){
+export function applianceStateMapper(input: []){
     return plainToClass(ApplianceState, input)
 }

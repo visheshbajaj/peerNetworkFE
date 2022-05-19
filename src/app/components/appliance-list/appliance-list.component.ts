@@ -12,7 +12,7 @@ export class ApplianceListComponent implements OnInit {
   applianceState: ApplianceState = new ApplianceState();
   
   acState: ApplianceState = new ApplianceState('AC', true, 20, '54.204.76.18', 8085);
-  bulbState:ApplianceState = new ApplianceState('Bulb', true, 40, '54.204.76.18', 8085);
+  bulbState:ApplianceState = new ApplianceState('Bulb', true, 40, '18.212.204.157', 8085);
 
   defaultState: ApplianceState[] = [this.acState, this.bulbState]
   applianceStateList: ApplianceState[] = []
@@ -21,14 +21,14 @@ export class ApplianceListComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // this.defaultState.map(appliance => {
-    //   this.connectionHandler.getData(appliance).subscribe(result => {
-    //     this.applianceStateList.push(applianceStateMapper(result))
-    //   })
-    // })
-
-    this.applianceStateList = this.defaultState;
-
+    this.defaultState.map(appliance => {
+      this.connectionHandler.getData(appliance).subscribe(result => {
+        console.log(result)
+        let x = result[0]
+        this.applianceStateList.push(applianceStateMapper(result[0]))
+      })
+    })
+    // this.applianceStateList = this.defaultState;
   }
 
   updateApplianceState(event: any): void {

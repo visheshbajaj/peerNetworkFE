@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ApplianceState } from '../models/ApplianceState';
 import { Observable } from 'rxjs';
 
@@ -12,20 +12,22 @@ export class ConnectionHandlerService {
   constructor(private http: HttpClient) { }
 
   getData(data: ApplianceState){
-    return this.http.get(this._getUrl);
+    let _url = this.generateRequestUrl(data, 'GET');
+    return this.http.get(_url);
   }
 
   postData(data: ApplianceState){
-    let _url = this.generateRequestUrl(data, 'POST');
-    console.log(_url)
-    return this.http.put(_url, {})
+    let _url = this.generateRequestUrl(data, 'PUT');
+    let x = this.http.put(_url, {}); 
+    console.log(x)
+    return x
   }
 
   private generateRequestUrl(applianceState:ApplianceState, action: string ) {
-    if(action == 'POST'){
+    if(action == 'PUT'){
       const sensorType = applianceState.appliance == 'AC' ? 'temperature' : 'motion'
       const state = applianceState.state ? 'on' : 'off'
-      return `http://${applianceState.ip}:${applianceState.port}/peer/putData?sensorType=${sensorType}&value=${applianceState.value}&onOff=${state}`  
+      return `http://${applianceState.ip}:${applianceState.port}/peer/putData?sensorType=${sensorType}&value=${applianceState.value}&onOff=${state}&device=mobile`  
     } else {
       return `http://${applianceState.ip}:${applianceState.port}/peer/getData`
     }
