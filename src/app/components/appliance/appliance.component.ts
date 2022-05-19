@@ -19,9 +19,9 @@ export class ApplianceComponent implements OnInit, OnChanges {
 
   applianceCharacteristics = [
     {"appliance": "AC", "minValue" : 16, "maxValue" : 30, "step" : 1},
-    {"appliance": "Bulb", "minValue" : 0, "maxValue" : 100, "step" : 5}
+    {"appliance": "Light", "minValue" : 0, "maxValue" : 100, "step" : 5}
   ]
-  
+
   applianceState: ApplianceState
 
   constructor() {
@@ -42,7 +42,7 @@ export class ApplianceComponent implements OnInit, OnChanges {
 
   getApplianceCharacteristic(appliance: string, characteristic: string) {
     let element = this.applianceCharacteristics.find(element => element.appliance == appliance)
-    
+
     switch(characteristic) {
       case 'min':
         return element?.minValue
@@ -51,7 +51,7 @@ export class ApplianceComponent implements OnInit, OnChanges {
       case 'step':
         return element?.step
     }
-    return 
+    return
   }
 
   updateApplianceState(event: any, sourceId: string): void{

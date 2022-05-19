@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class ConnectionHandlerService {
   private _getUrl = '../../assets/data.json'
-  
+
   constructor(private http: HttpClient) { }
 
   getData(data: ApplianceState){
@@ -16,21 +16,32 @@ export class ConnectionHandlerService {
     return this.http.get(_url);
   }
 
-  postData(data: ApplianceState){
+  putData(data: ApplianceState){
     let _url = this.generateRequestUrl(data, 'PUT');
-    let x = this.http.put(_url, {}); 
-    console.log(x)
-    return x
+    return this.http.put(_url, {});
   }
 
   private generateRequestUrl(applianceState:ApplianceState, action: string ) {
-    if(action == 'PUT'){
-      const sensorType = applianceState.appliance == 'AC' ? 'temperature' : 'motion'
-      const state = applianceState.state ? 'on' : 'off'
-      return `http://${applianceState.ip}:${applianceState.port}/peer/putData?sensorType=${sensorType}&value=${applianceState.value}&onOff=${state}&device=mobile`  
-    } else {
-      return `http://${applianceState.ip}:${applianceState.port}/peer/getData`
+    let sensorType, ip, port;
+    switch (applianceState.appliance) {
+      case 'AC':
+        sensorType = 'temperature'
+        ip = '54.204.76.18'
+        port = '8085'
+        break;
+      case 'Light':
+        sensorType = 'motion'
+        ip = '18.212.204.157'
+        port = '8085'
+        break;
     }
-    
+
+    if(action == 'PUT'){
+      const state = applianceState.state ? 'on' : 'off'
+      return `http://${ip}:${port}/peer/putData?sensorType=${sensorType}&value=${applianceState.value}&onOff=${state}&device=mobile`
+    } else {
+      return `http://${ip}:${port}/peer/getData`
+    }
+
   }
 }

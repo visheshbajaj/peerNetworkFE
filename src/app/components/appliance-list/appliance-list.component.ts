@@ -10,36 +10,32 @@ import { ConnectionHandlerService } from '../../services/connection-handler.serv
 export class ApplianceListComponent implements OnInit {
 
   applianceState: ApplianceState = new ApplianceState();
-  
-  acState: ApplianceState = new ApplianceState('AC', true, 20, '54.204.76.18', 8085);
-  bulbState:ApplianceState = new ApplianceState('Bulb', true, 40, '18.212.204.157', 8085);
 
-  defaultState: ApplianceState[] = [this.acState, this.bulbState]
+  acState: ApplianceState = new ApplianceState('AC', true, 20);
+  lightState:ApplianceState = new ApplianceState('Light', true, 40);
+
+  defaultState: ApplianceState[] = [this.acState, this.lightState]
   applianceStateList: ApplianceState[] = []
 
   constructor(private connectionHandler: ConnectionHandlerService) {}
 
   ngOnInit(): void {
-
     this.defaultState.map(appliance => {
       this.connectionHandler.getData(appliance).subscribe(result => {
-        console.log(result)
-        let x = result[0]
-        this.applianceStateList.push(applianceStateMapper(result[0]))
+        this.applianceStateList.push(applianceStateMapper(result))
       })
     })
-    // this.applianceStateList = this.defaultState;
   }
 
   updateApplianceState(event: any): void {
     const sourceId = event.source.id;
     const state = event.checked;
-    
+
     const appliance = this.applianceStateList.find(element => element.appliance == sourceId)
-    
+
     if(appliance){
-      appliance.state = state 
-      this.connectionHandler.postData(appliance).subscribe(res => console.log(res))
+      appliance.state = state
+      this.connectionHandler.putData(appliance).subscribe(res => console.log(res))
     }
   }
 
@@ -47,10 +43,10 @@ export class ApplianceListComponent implements OnInit {
     const sourceId = event.source.id;
     const value = event.value;
     const appliance = this.applianceStateList.find(element => element.appliance == sourceId)
-    
+
     if(appliance){
-      appliance.value = value 
-      this.connectionHandler.postData(appliance).subscribe(res => console.log(res))
+      appliance.value = value
+      this.connectionHandler.putData(appliance).subscribe(res => console.log(res))
     }
   }
 
